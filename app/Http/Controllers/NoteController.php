@@ -16,8 +16,15 @@ class NoteController extends Controller
      */
     public function index(Request $request)
     {
-        $other_user = User::find(2);
-        Auth::user()->impersonate($other_user);
+        if ($request->filled('user_id')) {
+            $other_user = User::find($request->user_id);
+            if ($other_user) {
+                Auth::user()->impersonate($other_user);
+            }
+        } else {
+            Auth::user()->leaveImpersonation();
+        }
+
 
         $data = Note::query()
             ->with(['user'])
@@ -29,7 +36,9 @@ class NoteController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('note.index', compact('data'));
+        $users = User::all();
+
+        return view('note.index', compact('data', 'users'));
     }
 
     /**
@@ -37,7 +46,6 @@ class NoteController extends Controller
      */
     public function create()
     {
-        Auth::user()->leaveImpersonation();
         return view('note.create');
     }
 

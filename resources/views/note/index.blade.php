@@ -8,6 +8,22 @@
                 <i class="bi bi-plus-lg"></i>
             </a>
         </div>
+        <form method="GET" action="{{ route('note.index') }}" class="mb-3">
+            <div class="input-group">
+
+                <select name="user_id" class="form-select">
+                    <option value="">-- Select User --</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <button class="btn btn-outline-secondary" type="submit">Impersonate</button>
+            </div>
+        </form>
+
         @if (session('success'))
             <div class="alert alert-success mb-3">
                 {{ session('success') }}
