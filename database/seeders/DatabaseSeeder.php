@@ -29,5 +29,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'kirakira4141@gmail.com',
             'password' => 'kirakira4141',
         ]);
+
+        User::create([
+            'name' => 'stranded',
+            'email' => 'stranded@gmail.com',
+            'password' => 'stranded@gmail.com',
+        ]);
     }
 }

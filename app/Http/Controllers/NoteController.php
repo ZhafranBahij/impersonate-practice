@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -14,13 +16,18 @@ class NoteController extends Controller
      */
     public function index(Request $request)
     {
+        $other_user = User::find(2);
+        Auth::user()->impersonate($other_user);
+
         $data = Note::query()
-                    ->whereAny([
-                        'title',
-                        'description'
-                    ], 'like', "%{$request->search}%")
-                    ->latest()
-                    ->paginate(10);
+            ->with(['user'])
+            ->where('user_id', auth()->id())
+            ->whereAny([
+                'title',
+                'description'
+            ], 'like', "%{$request->search}%")
+            ->latest()
+            ->paginate(10);
 
         return view('note.index', compact('data'));
     }
@@ -30,6 +37,7 @@ class NoteController extends Controller
      */
     public function create()
     {
+        Auth::user()->leaveImpersonation();
         return view('note.create');
     }
 
