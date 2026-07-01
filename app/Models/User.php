@@ -48,4 +48,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function canImpersonate()
+    {
+        return $this->id != 4;
+    }
+
+    public function canBeImpersonated()
+    {
+        return $this->id != 3;
+    }
 }

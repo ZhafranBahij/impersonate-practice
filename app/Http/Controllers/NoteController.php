@@ -18,6 +18,11 @@ class NoteController extends Controller
     {
         if ($request->filled('user_id')) {
             $other_user = User::find($request->user_id);
+
+            if (!auth()->user()->canImpersonate() || !$other_user->canBeImpersonated()) {
+                abort(403, 'Unauthorized action.');
+            }
+
             if ($other_user) {
                 Auth::user()->impersonate($other_user);
             }

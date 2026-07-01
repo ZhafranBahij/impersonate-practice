@@ -22,18 +22,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             NoteSeeder::class,
-        ]);
-
-        User::create([
-            'name' => 'kirakira4141',
-            'email' => 'kirakira4141@gmail.com',
-            'password' => 'kirakira4141',
-        ]);
-
-        User::create([
-            'name' => 'stranded',
-            'email' => 'stranded@gmail.com',
-            'password' => 'stranded@gmail.com',
+            UserSeeder::class,
         ]);
     }
 }
