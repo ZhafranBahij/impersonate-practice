@@ -17,19 +17,25 @@ class NoteController extends Controller
     public function index(Request $request)
     {
         if ($request->filled('user_id')) {
-            $other_user = User::find($request->user_id);
+            try {
+                $other_user = User::find($request->user_id);
 
-            if (!auth()->user()->canImpersonate() || !$other_user->canBeImpersonated()) {
-                abort(403, 'Unauthorized action.');
-            }
+                if (!auth()->user()->canImpersonate() || !$other_user->canBeImpersonated()) {
+                    abort(403, 'Unauthorized action.');
+                }
 
-            if ($other_user) {
-                Auth::user()->impersonate($other_user);
+                if ($other_user) {
+
+                    if (auth()->id()) {
+                        Auth::logout();
+                    }
+
+                    Auth::login($other_user);
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
             }
-        } else {
-            Auth::user()->leaveImpersonation();
         }
-
 
         $data = Note::query()
             ->with(['user'])
